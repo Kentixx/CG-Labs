@@ -1,0 +1,41 @@
+@use 'variables' as *;
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: $gap;
+
+  &__title {
+    margin: 0;
+    font-size: 1.6rem;
+  }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: $gap;
+  align-items: start;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 $gap $gap;
+
+  @media (max-width: $bp-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $gap;
+
+  @media (max-width: $bp-tablet) {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,27 @@
+@use 'variables' as *;
+
+@mixin card {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  box-shadow: 0 1px 3px rgba(20, 30, 60, 0.06);
+  padding: $gap * 0.8;
+}
+
+// Градиент под ползунком задаётся из JS через переменную --track
+@mixin slider-track {
+  height: 14px;
+  border-radius: 7px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: var(--track, #ccc);
+}
+
+@mixin slider-thumb {
+  width: 18px;
+  height: 24px;
+  border-radius: 6px;
+  border: 2px solid #fff;
+  background: #2b2f3a;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+  cursor: grab;
+}

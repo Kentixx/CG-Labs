@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Цветовые модели</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="app-header__title">Цветовые модели</h1>
+  </header>
+
+  <main class="layout">
+    <section class="preview card" aria-label="Текущий цвет">
+      <div class="preview__swatch" id="swatch"></div>
+      <div class="preview__tools">
+        <label class="field">
+          <span class="field__label">HEX</span>
+          <input id="hex" class="field__input" type="text" maxlength="7" spellcheck="false" autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field__label">Палитра цветов</span>
+          <input id="native" class="field__color" type="color">
+        </label>
+      </div>
+    </section>
+
+    <div class="panels" id="panels"></div>
+  </main>
+
+  <script src="js/colorModels.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "color-models-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Лабораторная работа 1: цветовые модели CMYK / RGB / HLS (нечётный вариант)",
+  "scripts": {
+    "build": "sass src/scss/main.scss css/style.css --style=expanded",
+    "watch": "sass --watch src/scss/main.scss css/style.css"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0"
+  }
+}

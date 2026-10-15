@@ -1,0 +1,169 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.card {
+  @include card;
+}
+
+.preview {
+  &__swatch {
+    height: 150px;
+    border-radius: $radius * 0.7;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+  }
+
+  &__tools {
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+  }
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+
+  &__label {
+    font-size: 0.8rem;
+    color: $color-muted;
+  }
+
+  &__input {
+    width: 100%;
+    min-width: 0;
+    padding: 6px 8px;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    font: inherit;
+    font-family: ui-monospace, Consolas, monospace;
+
+    &.is-invalid {
+      border-color: $color-danger;
+      background: rgba($color-danger, 0.07);
+    }
+  }
+
+  &__color {
+    width: 100%;
+    height: 36px;
+    padding: 0;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    background: none;
+    cursor: pointer;
+  }
+}
+
+.model-card {
+  min-width: 0;
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+
+  &__full {
+    font-size: 0.8rem;
+    color: $color-muted;
+  }
+}
+
+.palette {
+  position: relative;
+  width: 100%;
+  max-width: $palette-max;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  cursor: crosshair;
+  touch-action: none;
+
+  &__canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  &__marker {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+  }
+
+  &__caption {
+    margin: 6px 0 14px;
+    font-size: 0.8rem;
+    text-align: center;
+    color: $color-muted;
+  }
+}
+
+.rows {
+  display: grid;
+  gap: 10px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 22px 1fr 64px;
+  align-items: center;
+  gap: 10px;
+
+  &__label {
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &__number {
+    width: 100%;
+    padding: 5px 6px;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    font: inherit;
+    text-align: right;
+
+    &.is-invalid {
+      border-color: $color-danger;
+      background: rgba($color-danger, 0.07);
+    }
+  }
+
+  &__slider {
+    width: 100%;
+    margin: 0;
+    background: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+
+    &::-webkit-slider-runnable-track {
+      @include slider-track;
+    }
+
+    &::-moz-range-track {
+      @include slider-track;
+    }
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      margin-top: -6px;
+      @include slider-thumb;
+    }
+
+    &::-moz-range-thumb {
+      @include slider-thumb;
+    }
+  }
+}
