@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Лабораторная работа 2 — вариант 11</title>
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body>
+    <div class="app">
+        <header class="top">
+            <div>
+                <div class="eyebrow">Обработка цифровых изображений · Вариант 11</div>
+                <h1>Поэлементные операции, преобразования яркости и локальная пороговая обработка</h1>
+                <div class="sub">Лабораторная работа 2</div>
+            </div>
+        </header>
+        <nav class="tabs"><button class="tab active" data-mode="point">Поэлементные операции</button><button class="tab"
+                data-mode="threshold">Локальная пороговая обработка</button></nav>
+        <div class="layout">
+            <aside class="panel">
+                <h2>Изображение и параметры</h2>
+                <div class="dropmini" id="sourceDrop"><strong>Исходное изображение</strong>Перетащите файл в это поле
+                    или выберите его<input type="file" id="sourceFile" accept="image/*"></div>
+                <div class="field hidden" id="secondWrap">
+                    <div class="dropmini" id="secondDrop"><strong>Второе изображение</strong>Размер будет
+                        приведён к размеру первого<input type="file" id="secondFile" accept="image/*"></div>
+                </div>
+                <div class="field" id="operationWrap"><label for="operation">Операция</label><select id="operation">
+                        <optgroup label="Одно изображение">
+                            <option value="A1">A1 — Негатив</option>
+                            <option value="A2">A2 — Линейное преобразование яркости и контраста</option>
+                            <option value="A3">A3 — Гамма-коррекция</option>
+                            <option value="A4">A4 — Логарифмическое преобразование</option>
+                        </optgroup>
+                        <optgroup label="Два изображения">
+                            <option value="A6">A6 — Сумма / среднее</option>
+                            <option value="A8">A8 — Поэлементное произведение (маска)</option>
+                        </optgroup>
+                    </select></div>
+                <div class="field hidden" id="thresholdWrap"><label for="thresholdMethod">Метод пороговой
+                        обработки</label><select id="thresholdMethod">
+                        <option value="niblack">Ниблацка</option>
+                        <option value="bernsen">Бернсена</option>
+                    </select></div>
+                <div id="dynamicControls"></div>
+                <div id="formula" class="formula">s = 255 − r</div>
+                <div class="actions"><button class="primary" id="processBtn" disabled>Обработать</button><button
+                        id="resetBtn">Сбросить</button><button id="saveBtn" disabled>Сохранить PNG</button></div>
+                <div class="status" id="status">Загрузите изображение, чтобы начать работу.</div>
+                <div class="badges"><span>PNG / JPEG / WebP</span><span>Вывод в
+                    PNG</span></div>
+                <div class="note">Для локальных методов на очень больших фотографиях вычисления занимают больше времени.</div>
+            </aside>
+            <main class="work">
+                <section class="panel">
+                    <div class="previewgrid">
+                        <div class="viewbox">
+                            <div class="viewhead"><strong>До обработки</strong><span id="sourceInfo">нет
+                                    изображения</span></div>
+                            <div class="zoombar" aria-label="Масштаб исходного изображения">
+                                <button type="button" class="zoom-btn" data-zoom-target="source" data-zoom-step="-1" aria-label="Уменьшить исходное изображение">−</button>
+                                <button type="button" class="zoom-value" id="sourceZoomValue" data-zoom-reset="source" title="Сбросить масштаб">100%</button>
+                                <button type="button" class="zoom-btn" data-zoom-target="source" data-zoom-step="1" aria-label="Увеличить исходное изображение">+</button>
+                                <span class="zoom-hint">Колесо мыши — масштаб</span>
+                            </div>
+                            <div class="stage" id="sourceStage">
+                                <div class="placeholder">
+                                    <div class="icon">↥</div><b>Загрузите изображение</b>Или перетащите файл сюда
+                                </div><canvas id="sourceCanvas" class="hidden"></canvas>
+                            </div>
+                        </div>
+                        <div class="viewbox">
+                            <div class="viewhead"><strong>После обработки</strong><span id="resultInfo">нет
+                                    результата</span></div>
+                            <div class="zoombar" aria-label="Масштаб обработанного изображения">
+                                <button type="button" class="zoom-btn" data-zoom-target="result" data-zoom-step="-1" aria-label="Уменьшить результат">−</button>
+                                <button type="button" class="zoom-value" id="resultZoomValue" data-zoom-reset="result" title="Сбросить масштаб">100%</button>
+                                <button type="button" class="zoom-btn" data-zoom-target="result" data-zoom-step="1" aria-label="Увеличить результат">+</button>
+                                <span class="zoom-hint">Колесо мыши — масштаб</span>
+                            </div>
+                            <div class="stage" id="resultStage">
+                                <div class="placeholder">
+                                    <div class="icon">✦</div><b>Результат появится здесь</b>Настройте метод и нажмите
+                                    «Обработать»
+                                </div><canvas id="resultCanvas" class="hidden"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="panel hidden" id="histPanel">
+                    <h2>Гистограммы яркости</h2>
+                    <div class="histgrid">
+                        <div class="histbox">
+                            <h3>Исходное изображение (яркость)</h3><canvas id="histSource" width="512"
+                                height="140"></canvas>
+                        </div>
+                        <div class="histbox">
+                            <h3>Результат пороговой обработки</h3><canvas id="histResult" width="512"
+                                height="140"></canvas>
+                        </div>
+                    </div>
+                    <div class="histnotice">Гистограммы показываются только для локальной пороговой обработки. У
+                        результата бинарного изображения обычно наблюдаются пики около 0 и 255.</div>
+                </section>
+                <section class="panel help">
+                    <h2>Краткая справка по методам</h2>
+                    <details>
+                        <summary>Ниблацка</summary>
+                        <p>Для окна вокруг пикселя вычисляются локальное среднее <code>m</code> и стандартное отклонение
+                            <code>σ</code>. Порог: <code>T(x,y)=m(x,y)+k·σ(x,y)</code>. Размер окна и коэффициент k
+                            настраиваются. Метод учитывает локальные изменения яркости, но на однородных областях и при
+                            сильном шуме может создавать ложные фрагменты.</p>
+                    </details>
+                    <details>
+                        <summary>Бернсена</summary>
+                        <p>В окне находятся локальные минимум <code>zmin</code> и максимум <code>zmax</code>. Локальный
+                            контраст <code>C=zmax−zmin</code>, порог <code>T=(zmax+zmin)/2</code>. Если C ниже порога
+                            минимального контраста, используется резервное решение по яркости середины шкалы (128),
+                            чтобы классифицировать слабо контрастные области. Настраиваются размер окна и минимальный
+                            контраст.</p>
+                    </details>
+                </section>
+                <div class="foot">Подсказка: для отчёта сделайте скриншоты исходного изображения, выбранных параметров и
+                    результата отдельно для Ниблацка и Бернсена.</div>
+            </main>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+
+</html>

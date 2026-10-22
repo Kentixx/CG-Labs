@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Подготовка дефектных изображений — лабораторная 2</title>
+    <style>
+        :root {
+            --bg: #101113;
+            --panel: #1a1d22;
+            --line: #343a45;
+            --text: #f1f3f7;
+            --muted: #a6adba;
+            --accent: #f1b96c;
+            --green: #8ad7c2
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(900px 400px at 10% -5%, #30291c, transparent 65%), var(--bg);
+            color: var(--text);
+            font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif
+        }
+
+        .app {
+            max-width: 1300px;
+            margin: auto;
+            padding: 26px 20px 42px
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 16px;
+            margin-bottom: 18px
+        }
+
+        .label {
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .13em;
+            text-transform: uppercase
+        }
+
+        h1 {
+            font-size: clamp(25px, 3vw, 37px);
+            margin: 7px 0;
+            line-height: 1.15
+        }
+
+        .sub,
+        .muted {
+            color: var(--muted)
+        }
+
+        .badge {
+            font-size: 12px;
+            border: 1px solid #5c4b32;
+            border-radius: 999px;
+            padding: 7px 11px;
+            color: #f3d6ac
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 17px
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 17px;
+            padding: 18px
+        }
+
+        .panel h2 {
+            font-size: 17px;
+            margin: 0 0 12px
+        }
+
+        .field {
+            margin: 14px 0
+        }
+
+        .field label {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 7px;
+            font-size: 13px
+        }
+
+        select,
+        input[type=range] {
+            width: 100%
+        }
+
+        select {
+            background: #0f1115;
+            color: var(--text);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 11px
+        }
+
+        input[type=range] {
+            accent-color: var(--accent)
+        }
+
+        input[type=file] {
+            width: 100%;
+            font-size: 12px;
+            margin-top: 8px
+        }
+
+        .drop {
+            border: 1px dashed #66573e;
+            border-radius: 12px;
+            text-align: center;
+            padding: 13px;
+            background: #171710;
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        .drop b {
+            display: block;
+            color: var(--text);
+            font-size: 13px
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px
+        }
+
+        button {
+            background: #262b34;
+            border: 1px solid #454d5b;
+            color: var(--text);
+            padding: 9px 13px;
+            border-radius: 10px;
+            font: inherit;
+            cursor: pointer
+        }
+
+        button.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #24170a;
+            font-weight: 750
+        }
+
+        button:disabled {
+            opacity: .4;
+            cursor: not-allowed
+        }
+
+        .previews {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px
+        }
+
+        .title {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 13px;
+            margin-bottom: 8px
+        }
+
+        .title span {
+            font-size: 11px;
+            color: var(--muted)
+        }
+
+        .stage {
+            height: min(55vh, 540px);
+            min-height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0d0e11;
+            border: 1px dashed #3b414c;
+            border-radius: 13px;
+            overflow: hidden
+        }
+
+        .stage canvas {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto
+        }
+
+        .placeholder {
+            padding: 22px;
+            text-align: center;
+            color: var(--muted)
+        }
+
+        .metrics {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-top: 14px
+        }
+
+        .metric {
+            background: #12151b;
+            border: 1px solid var(--line);
+            padding: 8px 10px;
+            border-radius: 10px;
+            color: #cbd3df;
+            font-size: 12px
+        }
+
+        .metric b {
+            color: var(--green)
+        }
+
+        .status {
+            padding: 10px 12px;
+            background: #11161a;
+            border-radius: 10px;
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 13px
+        }
+
+        .tip {
+            margin-top: 12px;
+            background: #262014;
+            border: 1px solid #51412a;
+            border-radius: 11px;
+            padding: 11px;
+            font-size: 12px;
+            color: #ecd5b0
+        }
+
+        footer {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        @media(max-width:850px) {
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            .previews {
+                grid-template-columns: 1fr
+            }
+
+            .stage {
+                height: 38vh
+            }
+
+            header {
+                display: block
+            }
+
+            .badge {
+                display: inline-block;
+                margin-top: 10px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header>
+            <div>
+                <div class="label">Дополнительный инструмент · не для демонстрации основного интерфейса</div>
+                <h1>Подготовка тестовых изображений</h1>
+                <div class="sub">Добавляйте контролируемые дефекты к исходным изображениям и сохраняйте пары «исходник —
+                    искажённая копия» для испытания алгоритмов.</div>
+            </div>
+            <div class="badge">C4 · Подготовка набора данных</div>
+        </header>
+        <div class="layout">
+            <aside class="panel">
+                <h2>Исходный файл</h2>
+                <div class="drop"><b>Загрузите изображение</b>Лучше сохранять копию исходника<input type="file"
+                        id="file" accept="image/*"></div>
+                <div class="field"><label for="defect">Тип дефекта</label><select id="defect">
+                        <option value="gaussian">Гауссов шум</option>
+                        <option value="saltpepper">Шум «соль-перец»</option>
+                        <option value="blur">Размытие</option>
+                        <option value="contrast">Снижение контраста</option>
+                        <option value="gradient">Градиент освещённости</option>
+                        <option value="jpeg">JPEG-сжатие</option>
+                    </select></div>
+                <div id="controls"></div>
+                <div class="actions"><button class="primary" id="apply" disabled>Создать дефект</button><button
+                        id="savePng" disabled>Сохранить PNG</button><button id="saveJpeg" disabled>Сохранить
+                        JPEG</button></div>
+                <div class="status" id="status">Загрузите изображение для подготовки теста.</div>
+                <div class="tip">Для честного сравнения используйте один и тот же исходник, фиксируйте тип дефекта и
+                    силу воздействия. Меняйте только один фактор за раз.</div>
+            </aside>
+            <main class="panel">
+                <div class="previews">
+                    <div>
+                        <div class="title"><b>Исходное изображение</b><span id="originalInfo">—</span></div>
+                        <div class="stage" id="originalStage">
+                            <div class="placeholder">Исходник появится здесь</div><canvas id="original"
+                                class="hidden"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="title"><b>Подготовленный дефект</b><span id="resultInfo">—</span></div>
+                        <div class="stage" id="resultStage">
+                            <div class="placeholder">Результат появится здесь</div><canvas id="result"
+                                class="hidden"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="metric">Размер исходника: <b id="sourceBytes">—</b></div>
+                    <div class="metric">Размер результата: <b id="resultBytes">—</b></div>
+                    <div class="metric">Отношение размеров: <b id="ratio">—</b></div>
+                </div>
+            </main>
+        </div>
+        <footer>Файл не отправляется на сервер. JPEG-компрессия выполнена кодировщиком браузера; точные результаты могут
+            немного различаться между браузерами. Сжатие JPEG с последующим сохранением в PNG не восстановит исходные
+            данные — PNG лишь сохранит уже искажённые пиксели без дальнейших потерь.</footer>
+    </div>
+    <script>
+        (() => {
+            const $ = id => document.getElementById(id); 
+            let base = null, baseBytes = 0, last = null, lastBytes = 0, lastJpegBlob = null; 
+            const oc = $('original'), rc = $('result'), ox = oc.getContext('2d', { willReadFrequently: true }), rx = rc.getContext('2d', { willReadFrequently: true }); 
+            const clamp = v => Math.min(255, Math.max(0, v)); 
+            function status(s) { 
+                $('status').textContent = s 
+            } 
+            function vis(c, yes) { 
+                c.classList.toggle('hidden', !yes); 
+                let p = c.parentElement.querySelector('.placeholder'); 
+                if (p) 
+                    p.classList.toggle('hidden', yes) 
+            } 
+            function range(id, label, min, max, step, value, unit = '') { 
+                return `<div class="field">
+                    <label for="${id}">
+                        <span>${label}</span>
+                        <span id="${id}Val">${value}${unit}</span>
+                    </label>
+                    <input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${value}">
+                </div>` 
+            } 
+                
+            function updateControls() { 
+                const t = $('defect').value; 
+                const defs = { 
+                    gaussian: range('strength', 'Сигма гауссова шума σ', 0, 60, 1, 15), 
+                    saltpepper: range('amount', 'Доля изменяемых пикселей', 0, 20, 0.5, 3, '%'), 
+                    blur: range('radius', 'Радиус размытия', 1, 12, 1, 3, ' px'), contrast: range('factor', 'Контраст (0 — серый, 1 — исходный)', 0, 1, 0.05, 0.45) + range('brightness', 'Смещение яркости', -80, 80, 1, 0), gradient: range('gradientStrength', 'Сила градиента освещённости', 0, 180, 5, 65), jpeg: range('quality', 'Качество JPEG', 5, 100, 5, 25, '%') }; $('controls').innerHTML = defs[t]; $('controls').querySelectorAll('input[type=range]').forEach(e => e.addEventListener('input', () => { const v = $(e.id + 'Val'); if (v) v.textContent = e.value + (e.id === 'amount' || e.id === 'quality' ? '%' : e.id === 'radius' ? ' px' : ''); })); } function scaleLabel(w, h) { return `${w}×${h}` } function bytesLabel(n) { if (!n) return '—'; return n < 1024 ? `${n} Б` : `${(n / 1024).toFixed(1)} КБ` } function updateMetrics() { $('sourceBytes').textContent = bytesLabel(baseBytes); $('resultBytes').textContent = bytesLabel(lastBytes); $('ratio').textContent = lastBytes ? `${(baseBytes / lastBytes).toFixed(2)} : 1` : '—'; }
+            function load(file) { if (!file || !file.type.startsWith('image/')) return status('Выберите файл изображения.'); if (file.size > 80 * 1024 * 1024) return status('Файл больше 80 МБ; используйте меньшую копию.'); const url = URL.createObjectURL(file), img = new Image(); img.onload = () => { if (img.naturalWidth * img.naturalHeight > 12000000) { URL.revokeObjectURL(url); return status('Изображение больше 12 Мп. Подготовьте уменьшенную копию.') } oc.width = img.naturalWidth; oc.height = img.naturalHeight; ox.drawImage(img, 0, 0); base = ox.getImageData(0, 0, oc.width, oc.height); baseBytes = file.size; lastJpegBlob = null; $('originalInfo').textContent = scaleLabel(oc.width, oc.height); vis(oc, true); $('apply').disabled = false; last = null; $('savePng').disabled = true; $('saveJpeg').disabled = true; lastBytes = 0; updateMetrics(); status('Исходное изображение загружено.'); URL.revokeObjectURL(url) }; img.onerror = () => { URL.revokeObjectURL(url); status('Не удалось открыть файл.') }; img.src = url }
+            function canvasFromData(d) { const c = document.createElement('canvas'); c.width = d.width; c.height = d.height; c.getContext('2d').putImageData(d, 0, 0); return c }
+            function gaussian() { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v) } function applyPixel() { const out = new ImageData(new Uint8ClampedArray(base.data), base.width, base.height), d = out.data, t = $('defect').value; for (let i = 0; i < d.length; i += 4) { if (t === 'gaussian') { let n = gaussian() * Number($('strength').value); for (let c = 0; c < 3; c++)d[i + c] = clamp(d[i + c] + n) } else if (t === 'saltpepper') { let p = Math.random() * 100, a = Number($('amount').value); if (p < a / 2) d[i] = d[i + 1] = d[i + 2] = 0; else if (p < a) d[i] = d[i + 1] = d[i + 2] = 255 } else if (t === 'contrast') { let f = Number($('factor').value), b = Number($('brightness').value); for (let c = 0; c < 3; c++)d[i + c] = clamp((d[i + c] - 127.5) * f + 127.5 + b) } else if (t === 'gradient') { const x = (i / 4) % base.width, y = Math.floor(i / 4 / base.width), pos = (x / (base.width - 1 || 1) + y / (base.height - 1 || 1)) / 2, m = (pos - .5) * Number($('gradientStrength').value); for (let c = 0; c < 3; c++)d[i + c] = clamp(d[i + c] + m) } } return out }
+            function blurData(src, r) { const w = src.width, h = src.height, im = canvasFromData(src), ctx = im.getContext('2d'); ctx.clearRect(0, 0, w, h); ctx.filter = `blur(${r}px)`; ctx.drawImage(canvasFromData(src), 0, 0); ctx.filter = 'none'; return ctx.getImageData(0, 0, w, h) } async function apply() { if (!base) return; const t = $('defect').value; status('Генерация искажённой копии…'); try { let res; if (t === 'blur') res = blurData(base, Number($('radius').value)); else if (t === 'jpeg') { const c = canvasFromData(base), blob = await new Promise((resolve, reject) => c.toBlob(b => b ? resolve(b) : reject(Error('Не удалось кодировать JPEG')), 'image/jpeg', Number($('quality').value) / 100)); const u = URL.createObjectURL(blob); res = await new Promise((resolve, reject) => { const im = new Image(); im.onload = () => { const c2 = document.createElement('canvas'); c2.width = im.naturalWidth; c2.height = im.naturalHeight; c2.getContext('2d').drawImage(im, 0, 0); URL.revokeObjectURL(u); resolve(c2.getContext('2d').getImageData(0, 0, c2.width, c2.height)) }; im.onerror = () => { URL.revokeObjectURL(u); reject(Error('Не удалось прочитать JPEG-результат')) }; im.src = u }); lastBytes = blob.size; lastJpegBlob = blob } else { res = applyPixel(); lastJpegBlob = null; } last = res; rc.width = res.width; rc.height = res.height; rx.putImageData(res, 0, 0); vis(rc, true); $('resultInfo').textContent = scaleLabel(rc.width, rc.height); if (t !== 'jpeg') { lastBytes = await new Promise(resolve => rc.toBlob(b => resolve(b ? b.size : 0), 'image/png')) } updateMetrics(); $('savePng').disabled = false; $('saveJpeg').disabled = false; status('Дефект подготовлен. Сохраните файл и пометьте его тип/параметры в наборе данных.') } catch (e) { status(e.message || 'Ошибка подготовки изображения') } } function triggerDownload(blob, name) { const u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(u), 1000) } function download(type) { if (!last) return; if (type === 'jpeg' && lastJpegBlob) { triggerDownload(lastJpegBlob, 'test_distorted.jpg'); return } const c = canvasFromData(last), mime = type === 'jpeg' ? 'image/jpeg' : 'image/png', quality = Number($('quality')?.value || 80) / 100; c.toBlob(b => { if (b) triggerDownload(b, type === 'jpeg' ? 'test_distorted.jpg' : 'test_distorted.png') }, mime, quality) } $('file').addEventListener('change', e => load(e.target.files[0])); $('defect').addEventListener('change', updateControls); $('apply').addEventListener('click', apply); $('savePng').addEventListener('click', () => download('png')); $('saveJpeg').addEventListener('click', () => download('jpeg')); updateControls();
+        })();
+    </script>
+</body>
+
+</html>
